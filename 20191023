@@ -1,0 +1,35 @@
+233boy一键脚本存入，尽量选debian9.0以上版本，自动开启BBR加速
+sudo -i（如果root开头，不用这一步）
+apt-get update -y && apt-get install curl -y(如果提示curl: command not found，那是因为没装Curl，就先执行这一步安装curl)
+apt-get install git -y(如果这行不行就先输入：apt-get update)
+git clone https://github.com/hennesshuang/v2ray -b master
+cd v2ray
+chmod +x install.sh
+./install.sh local
+reboot
+
+-------------------------------------------------------------------------
+wulabing一键脚本存入（V2Ray基于Nginx的vmess+ws+tls一键安装脚本）
+apt-get update -y && apt-get install curl -y（安装curl）
+date -R（先查看vps时间是否准确，不准确要修改）
+tzselect（按提示选择时区）
+date -s "2019-12-11 11:20:30"（修改vps时间，注意换算时区）
+bash <(curl -L -s https://raw.githubusercontent.com/hennesshuang/V2Ray_ws-tls_bash_onekey/master/install.sh) | tee v2ray_ins.log（一键脚本）
+
+----------------------------------------------------------------
+定时重启v2ray(每6小时)
+apt install cron(常见的Linux操作系统都已经预装了crontab，并且默认已设置开机自启，如果你的系统尚未安装,执行此命令)
+yum install crontabs (安装crontab，提示yum不存在就跳转下一步)
+systemctl start cron(启动crontab服务1)
+systemctl enable cron(启动crontab服务2)
+crontab -e(使用crontab命令打开该配置文件)
+如果系统中包含多个编辑文件的软件，可能会询问你使用哪个软件进行编辑，这里可选择vim.basic。
+如果没有vim.basic，尝试安装vim：sudo apt-get install vim，然后重选择默认编辑器：update-alternatives --config editor
+还是默认打开nano编辑器的话可以删除nano编辑器：sudo apt-get remove nano
+用vim.basic打开crontab后，方向键拉倒最下面一行末尾，按i，增加一行输入
+0 */6 * * * /etc/init.d/v2ray restart
+然后按esc，输入(输入含冒号):wq（保存退出）
+
+-------------------------------------------------------------
+修改密码
+passwd root
